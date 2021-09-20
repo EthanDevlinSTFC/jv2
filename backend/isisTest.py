@@ -10,6 +10,8 @@ from xml.etree.ElementTree import parse
 app = Flask(__name__)
 
 # Get instrument cycle values
+
+
 @app.route('/getCycles/<instrument>')
 def getCycles(instrument):
     url = 'http://data.isis.rl.ac.uk/journals/ndx'+instrument+'/journal_main.xml'
@@ -25,6 +27,8 @@ def getCycles(instrument):
     return jsonify(cycles)
 
 # Get cycle run data
+
+
 @app.route('/getJournal/<instrument>/<cycle>')
 def getJournal(instrument, cycle):
     url = 'http://data.isis.rl.ac.uk/journals/ndx'+instrument+'/'+cycle
@@ -47,6 +51,7 @@ def getJournal(instrument, cycle):
             runData[dataId] = dataValue
         fields.append(runData)
     return jsonify(fields)
+
 
 # Redundant
 """
