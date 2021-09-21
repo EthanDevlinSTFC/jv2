@@ -54,5 +54,5 @@ def getJournal(instrument, cycle):
     return jsonify(fields)
 
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
     app.run()
