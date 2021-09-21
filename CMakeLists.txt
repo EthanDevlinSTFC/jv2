@@ -28,14 +28,14 @@ set(QT_DEFAULT_MAJOR_VERSION 6)
 find_package(OpenGL REQUIRED)
 find_package(
   Qt6
-  COMPONENTS 
-    Core 
-    Gui 
-    Widgets 
-    Network 
-    OpenGL 
-    OpenGLWidgets
-    REQUIRED)
+  COMPONENTS Core
+            Gui
+            Widgets
+            Network
+            OpenGL
+            OpenGLWidgets
+            REQUIRED)
+  
 find_package(Qt6OpenGL 6.0 REQUIRED)
 find_package(Qt6OpenGLWidgets 6.0 REQUIRED)
 
