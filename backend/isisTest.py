@@ -14,7 +14,8 @@ app = Flask(__name__)
 
 @app.route('/getCycles/<instrument>')
 def getCycles(instrument):
-    url = 'http://data.isis.rl.ac.uk/journals/ndx'+instrument+'/journal_main.xml'
+    url = 'http://data.isis.rl.ac.uk/journals/'
+    url+= 'ndx'+instrument+'/journal_main.xml'
     try:
         response = urlopen(url)
     except:
@@ -34,7 +35,7 @@ def getJournal(instrument, cycle):
     url = 'http://data.isis.rl.ac.uk/journals/ndx'+instrument+'/'+cycle
     try:
         response = urlopen(url)
-    except:
+    except Exception:
         return jsonify({"response": "ERR. url not found"})
     tree = parse(response)
     root = tree.getroot()

@@ -32,14 +32,13 @@ stages:
               versionSpec: '3.x'
               addToPath: true
               architecture: 'x64'
-          - bash: pip install pycodestyle
-            displayName: 'Install tooling'
           - bash: |
               set -ex
+              pip install pycodestyle
               find . -type f -regex '.*\.\py' -exec pycodestyle '{}' \;
               git diff
               git diff --quiet
-            displayName: 'Run cmake-format'
+            displayName: 'Run pep8-format'
       - job: 'cmake_checks'
         displayName: 'CMake Checks'
         pool:
