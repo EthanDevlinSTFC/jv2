@@ -53,6 +53,6 @@ def getJournal(instrument, cycle):
         fields.append(runData)
     return jsonify(fields)
 
+
 if __name__ == '__main__':  
     app.run()
-
