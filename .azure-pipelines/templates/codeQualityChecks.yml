@@ -35,7 +35,7 @@ stages:
           - bash: |
               set -ex
               pip install pycodestyle
-              find . -type f -regex '.*\.\py' -exec pycodestyle -i '{}' \;
+              find . -type f -regex '.*\.\py' -exec pycodestyle '{}' \;
               git diff
               git diff --quiet
             displayName: 'Run pep8-format'
