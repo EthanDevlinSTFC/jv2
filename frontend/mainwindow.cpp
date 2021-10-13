@@ -5,11 +5,13 @@
 #include "./ui_mainwindow.h"
 #include "jsontablemodel.h"
 #include <QCheckBox>
+#include <QDebug>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include <QSettings>
 #include <QSortFilterProxyModel>
 #include <QWidgetAction>
 #include <QtGui>
@@ -47,9 +49,59 @@ void MainWindow::columnHider(int state) {
 
 void MainWindow::initialiseElements() {
   fillInstruments();
+  init = true;
   viewMenu = ui->menubar->addMenu("View");
   ui->runDataTable->horizontalHeader()->setSectionsMovable(true);
   ui->runDataTable->horizontalHeader()->setDragEnabled(true);
+  ui->runDataTable->setAlternatingRowColors(true);
+  ui->runDataTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+  ui->runDataTable->setStyleSheet("alternate-background-color: #e7e7e6;");
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+  connect(ui->groupButton, SIGNAL(toggled(bool)), this,
+          SLOT(groupButtonToggle(bool)));
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 6ce20d9... refactoring
+=======
+  
+=======
+
+>>>>>>> a6794d5... Recent instrument fix
+=======
+>>>>>>> 5783125... matching grouping fix
+  QSettings settings;
+  QString recentInstrument = settings.value("recentInstrument").toString();
+  qDebug() << "Recent Inst: " << recentInstrument;
+  int instrumentIndex = ui->instrumentsBox->findText(recentInstrument);
+  if (instrumentIndex != -1) {
+    ui->instrumentsBox->setCurrentIndex(instrumentIndex);
+  } else {
+    ui->instrumentsBox->setCurrentIndex(0);
+  }
+
+  recentCycle();
+}
+
+void MainWindow::recentCycle() {
+  QSettings settings;
+  QString recentCycle = settings.value("recentCycle").toString();
+  qDebug() << "Recent Cycle: " << recentCycle;
+  int cycleIndex = ui->cyclesBox->findText(recentCycle);
+  if (ui->instrumentsBox->currentText() != "default" &&
+      ui->instrumentsBox->currentText() != "") {
+    if (cycleIndex != -1) {
+      ui->cyclesBox->setCurrentIndex(cycleIndex);
+    } else if (ui->cyclesBox->currentText() != "default" &&
+               ui->cyclesBox->currentText() != "") {
+      ui->cyclesBox->setCurrentIndex(ui->cyclesBox->count());
+    }
+  } else {
+    ui->cyclesBox->setCurrentIndex(0);
+  }
+>>>>>>> 9438f02... implementing default journal
 }
 
 // Fill instrument list
@@ -60,13 +112,19 @@ void MainWindow::fillInstruments() {
   foreach (const QString instrument, instruments) {
     ui->instrumentsBox->addItem(instrument);
   }
+  connect(ui->instrumentsBox, SIGNAL(currentTextChanged(const QString)), this,
+          SLOT(instrumentsBoxChange(const QString)));
 }
 
-void MainWindow::on_instrumentsBox_currentTextChanged(const QString &arg1) {
+void MainWindow::instrumentsBoxChange(const QString &arg1) {
+  qDebug() << "inst change: " << arg1;
+  QSettings settings;
+  settings.setValue("recentInstrument", arg1);
   // Handle possible undesired calls
   if (arg1 == "default" || arg1 == "") {
     ui->cyclesBox->clear();
     ui->cyclesBox->addItem("default");
+    ui->filterBox->setEnabled(false);
     return;
   }
   QString url_str = "http://127.0.0.1:5000/getCycles/" + arg1;
@@ -79,10 +137,15 @@ void MainWindow::on_instrumentsBox_currentTextChanged(const QString &arg1) {
 }
 
 void MainWindow::on_cyclesBox_currentTextChanged(const QString &arg1) {
+  qDebug() << "cycle change: " << arg1;
+  QSettings settings;
+  settings.setValue("recentCycle", arg1);
   // Handle possible undesired calls
   if (arg1 == "default" || arg1 == "") {
+    ui->filterBox->setEnabled(false);
     return;
   }
+  ui->filterBox->setEnabled(true);
   QString url_str = "http://127.0.0.1:5000/getJournal/" +
                     ui->instrumentsBox->currentText() + "/" + arg1;
   HttpRequestInput input(url_str);
@@ -100,12 +163,86 @@ void MainWindow::on_filterBox_textChanged(const QString &arg1) {
   proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
 }
 
+// Filter table data
+void MainWindow::on_searchBox_textChanged(const QString &arg1) {
+  std::get<0>(matchesTuple).clear();
+  std::get<1>(matchesTuple) = 0;
+  if (arg1 == "") {
+    ui->runDataTable->selectionModel()->clearSelection();
+    return;
+  }
+  for (int i = 0; i < proxyModel->rowCount(); i++) {
+    if (ui->runDataTable->isColumnHidden(i) == false) {
+      std::get<0>(matchesTuple)
+          .append(proxyModel->match(proxyModel->index(0, i), Qt::DisplayRole,
+                                    arg1, -1));
+    }
+  }
+  for (QModelIndex match : std::get<0>(matchesTuple)) {
+    qDebug() << match.data().toString();
+  }
+  qDebug() << "";
+  if (std::get<0>(matchesTuple).size() > 0) {
+    qDebug() << "selecting" << std::get<0>(matchesTuple)[0].data().toString();
+    ui->runDataTable->selectionModel()->clearSelection();
+    ui->runDataTable->selectionModel()->setCurrentIndex(
+        std::get<0>(matchesTuple)[0],
+        QItemSelectionModel::Select | QItemSelectionModel::Rows);
+  }
+}
+
+void MainWindow::on_findUp_clicked() {
+  if (std::get<0>(matchesTuple).size() > 0) {
+    if (std::get<1>(matchesTuple) >= 1) {
+      std::get<1>(matchesTuple) -= 1;
+    } else {
+      std::get<1>(matchesTuple) = 0;
+    }
+    qDebug() << "selecting"
+             << std::get<0>(matchesTuple)[std::get<1>(matchesTuple)]
+                    .data()
+                    .toString();
+    ui->runDataTable->selectionModel()->clearSelection();
+    ui->runDataTable->selectionModel()->setCurrentIndex(
+        std::get<0>(matchesTuple)[std::get<1>(matchesTuple)],
+        QItemSelectionModel::Select | QItemSelectionModel::Rows);
+  }
+}
+
+void MainWindow::on_findDown_clicked() {
+  if (std::get<0>(matchesTuple).size() > 0) {
+    if (std::get<1>(matchesTuple) < std::get<0>(matchesTuple).size() - 1) {
+      std::get<1>(matchesTuple) += 1;
+    }
+    qDebug() << "selecting"
+             << std::get<0>(matchesTuple)[std::get<1>(matchesTuple)]
+                    .data()
+                    .toString();
+    ui->runDataTable->selectionModel()->clearSelection();
+    ui->runDataTable->selectionModel()->setCurrentIndex(
+        std::get<0>(matchesTuple)[std::get<1>(matchesTuple)],
+        QItemSelectionModel::Select | QItemSelectionModel::Rows);
+  }
+}
+
+void MainWindow::on_searchAll_clicked() {
+  if (std::get<0>(matchesTuple).size() > 0) {
+    ui->runDataTable->selectionModel()->clearSelection();
+    std::get<1>(matchesTuple) = -1;
+    for (int i = 0; i < std::get<0>(matchesTuple).size(); i++) {
+      ui->runDataTable->selectionModel()->setCurrentIndex(
+          std::get<0>(matchesTuple)[i],
+          QItemSelectionModel::Select | QItemSelectionModel::Rows);
+    }
+  }
+}
 // Fills cycles box
 void MainWindow::handle_result_instruments(HttpRequestWorker *worker) {
   QString msg;
-
+  qDebug() << "fill";
   if (worker->error_type == QNetworkReply::NoError) {
     auto response = worker->response;
+    ui->cyclesBox->blockSignals(true);
     ui->cyclesBox->clear();
     ui->cyclesBox->addItem("default");
     foreach (const QJsonValue &value, worker->json_array) {
@@ -113,10 +250,15 @@ void MainWindow::handle_result_instruments(HttpRequestWorker *worker) {
       if (value.toString() != "journal.xml")
         ui->cyclesBox->addItem(value.toString());
     }
+    ui->cyclesBox->blockSignals(false);
   } else {
     // an error occurred
     msg = "Error1: " + worker->error_str;
     QMessageBox::information(this, "", msg);
+  }
+  if (init) {
+    recentCycle();
+    init = false;
   }
 }
 
@@ -149,10 +291,19 @@ void MainWindow::handle_result_cycles(HttpRequestWorker *worker) {
     ui->runDataTable->setModel(proxyModel);
     model->setJson(jsonArray);
     ui->runDataTable->show();
-
   } else {
     // an error occurred
     msg = "Error2: " + worker->error_str;
     QMessageBox::information(this, "", msg);
   }
 }
+
+void MainWindow::on_groupButton_clicked(bool checked) {
+  if (checked) {
+    model->groupData();
+  } else {
+    model->unGroupData();
+  }
+}
+
+void MainWindow::on_clearSearchButton_clicked() { ui->filterBox->clear(); }
