@@ -56,22 +56,7 @@ void MainWindow::initialiseElements() {
   ui->runDataTable->setAlternatingRowColors(true);
   ui->runDataTable->setSelectionBehavior(QAbstractItemView::SelectRows);
   ui->runDataTable->setStyleSheet("alternate-background-color: #e7e7e6;");
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
-  connect(ui->groupButton, SIGNAL(toggled(bool)), this,
-          SLOT(groupButtonToggle(bool)));
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 6ce20d9... refactoring
-=======
-  
-=======
-
->>>>>>> a6794d5... Recent instrument fix
-=======
->>>>>>> 5783125... matching grouping fix
   QSettings settings;
   QString recentInstrument = settings.value("recentInstrument").toString();
   qDebug() << "Recent Inst: " << recentInstrument;
@@ -101,7 +86,6 @@ void MainWindow::recentCycle() {
   } else {
     ui->cyclesBox->setCurrentIndex(0);
   }
->>>>>>> 9438f02... implementing default journal
 }
 
 // Fill instrument list
