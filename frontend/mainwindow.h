@@ -12,42 +12,44 @@
 #include <tuple>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
-  Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
 
-public:
-  MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+    public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
-  void fillInstruments();
-  void initialiseElements();
-private slots:
-  void on_filterBox_textChanged(const QString &arg1);
-  void on_searchBox_textChanged(const QString &arg1);
-  void handle_result_instruments(HttpRequestWorker *worker);
-  void handle_result_cycles(HttpRequestWorker *worker);
-  void instrumentsBoxChange(const QString &arg1);
-  void on_cyclesBox_currentTextChanged(const QString &arg1);
-  void on_groupButton_clicked(bool checked);
-  void columnHider(int state);
-  void on_clearSearchButton_clicked();
-  void on_findUp_clicked();
-  void on_findDown_clicked();
-  void on_searchAll_clicked();
-  void recentCycle();
+    void fillInstruments();
+    void initialiseElements();
+    private slots:
+    void on_filterBox_textChanged(const QString &arg1);
+    void on_searchBox_textChanged(const QString &arg1);
+    void handle_result_instruments(HttpRequestWorker *worker);
+    void handle_result_cycles(HttpRequestWorker *worker);
+    void instrumentsBoxChange(const QString &arg1);
+    void on_cyclesBox_currentTextChanged(const QString &arg1);
+    void on_groupButton_clicked(bool checked);
+    void columnHider(int state);
+    void on_clearSearchButton_clicked();
+    void on_findUp_clicked();
+    void on_findDown_clicked();
+    void on_searchAll_clicked();
+    void recentCycle();
 
-private:
-  Ui::MainWindow *ui;
-  JsonTableModel *model;
-  QSortFilterProxyModel *proxyModel;
-  QMenu *viewMenu;
-  JsonTableModel::Header header;
-  std::tuple<QModelIndexList, int> matchesTuple;
-  bool init;
+    private:
+    Ui::MainWindow *ui;
+    JsonTableModel *model;
+    QSortFilterProxyModel *proxyModel;
+    QMenu *viewMenu;
+    JsonTableModel::Header header;
+    std::tuple<QModelIndexList, int> matchesTuple;
+    bool init;
 };
 #endif // MAINWINDOW_H
