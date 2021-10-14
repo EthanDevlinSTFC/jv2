@@ -8,9 +8,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    a.setWindowIcon(QIcon(":/icon"));
-    MainWindow w;
-    w.show();
-    return a.exec();
+    QApplication application(argc, argv);
+    application.setWindowIcon(QIcon(":/icon"));
+    MainWindow window;
+    window.show();
+    return application.exec();
 }

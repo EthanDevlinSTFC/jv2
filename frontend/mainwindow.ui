@@ -129,7 +129,7 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
-        <item alignment="Qt::AlignLeft">
+        <item>
          <widget class="QPushButton" name="groupButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -163,6 +163,8 @@
          </widget>
         </item>
         <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4"/>
+         <item>
          <widget class="QPushButton" name="findDown">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -199,6 +201,7 @@
            <string>^</string>
           </property>
          </widget>
+        </item>
         </item>
         <item>
          <widget class="QPushButton" name="searchAll">

@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "jsontablemodel.h"
+#include "test.cpp"
 #include <QCheckBox>
 #include <QDebug>
 #include <QJsonArray>
@@ -20,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     initialiseElements();
+    test();
 }
 
 MainWindow::~MainWindow() { delete ui; }

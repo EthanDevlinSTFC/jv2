@@ -26,21 +26,31 @@ class MainWindow : public QMainWindow
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    // Start-up functions
     void fillInstruments();
     void initialiseElements();
+    // Multi-File test
+    void test();
+
     private slots:
+    // Filtering
     void on_filterBox_textChanged(const QString &arg1);
-    void on_searchBox_textChanged(const QString &arg1);
+    void on_clearSearchButton_clicked();
+    // Data gathering
     void handle_result_instruments(HttpRequestWorker *worker);
     void handle_result_cycles(HttpRequestWorker *worker);
     void instrumentsBoxChange(const QString &arg1);
     void on_cyclesBox_currentTextChanged(const QString &arg1);
+    // Grouping
     void on_groupButton_clicked(bool checked);
+    // ViewMenu column hider
     void columnHider(int state);
-    void on_clearSearchButton_clicked();
+    // Searching
+    void on_searchBox_textChanged(const QString &arg1);
     void on_findUp_clicked();
     void on_findDown_clicked();
     void on_searchAll_clicked();
+    // Start-up functions
     void recentCycle();
 
     private:
