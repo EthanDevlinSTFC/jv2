@@ -94,3 +94,11 @@ void MainWindow::fillInstruments()
     }
     ui->instrumentsBox->blockSignals(false);
 }
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+  // Update history on close
+  QSettings settings;
+  settings.setValue("recentInstrument", ui->instrumentsBox->currentText());
+  settings.setValue("recentCycle", ui->cyclesBox->currentText());
+  event->accept();
+}
