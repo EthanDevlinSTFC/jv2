@@ -28,6 +28,7 @@ find_package(
              Gui
              Widgets
              Network
+             Charts
              OpenGL
              OpenGLWidgets
              REQUIRED)
@@ -38,6 +39,10 @@ find_package(Qt6OpenGLWidgets 6.0 REQUIRED)
 set(PROJECT_SOURCES
     frontend/main.cpp
     frontend/mainwindow.cpp
+    frontend/filtering.cpp
+    frontend/datagathering.cpp
+    frontend/searching.cpp
+    frontend/nexusInteraction.cpp
     frontend/mainwindow.h
     frontend/mainwindow.ui
     frontend/httprequestworker.cpp
@@ -67,11 +72,14 @@ if(APPLE)
   add_definitions(-D_MAC)
 endif(APPLE)
 
-add_executable(jv2 MACOSX_BUNDLE ${PROJECT_SOURCES})
+# Resources
+set(jv2_RES_QRC "frontend/icons.qrc")
+
+add_executable(jv2 MACOSX_BUNDLE ${PROJECT_SOURCES} ${jv2_RES_QRC})
 
 target_link_libraries(
   jv2 PRIVATE # External libs
-              Qt6::Widgets Qt6::Core Qt6::Network OpenGL::GL)
+              Qt6::Widgets Qt6::Core Qt6::Network Qt6::Charts OpenGL::GL)
 
 set_target_properties(
   jv2

@@ -6,39 +6,64 @@
 
 #include "httprequestworker.h"
 #include "jsontablemodel.h"
+#include <QChart>
 #include <QCheckBox>
 #include <QMainWindow>
 #include <QSortFilterProxyModel>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
-  Q_OBJECT
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
 
-public:
-  MainWindow(QWidget *parent = nullptr);
-  ~MainWindow();
+    public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
 
-  void fillInstruments();
-  void initialiseElements();
-private slots:
-  void on_filterBox_textChanged(const QString &arg1);
-  void handle_result_instruments(HttpRequestWorker *worker);
-  void handle_result_cycles(HttpRequestWorker *worker);
-  void on_instrumentsBox_currentTextChanged(const QString &arg1);
-  void on_cyclesBox_currentTextChanged(const QString &arg1);
-  void on_groupButton_clicked(bool checked);
-  void columnHider(int state);
+    void fillInstruments();
+    void initialiseElements();
+    void goToCurrentFoundIndex(QModelIndex index);
+    private slots:
+    void on_filterBox_textChanged(const QString &arg1);
+    void on_searchBox_textChanged(const QString &arg1);
+    void handle_result_instruments(HttpRequestWorker *worker);
+    void handle_result_cycles(HttpRequestWorker *worker);
+    void handle_result_fieldQuery(HttpRequestWorker *worker);
+    void handle_result_logData(HttpRequestWorker *worker);
+    void on_instrumentsBox_currentTextChanged(const QString &arg1);
+    void on_cyclesBox_currentTextChanged(const QString &arg1);
+    void on_groupButton_clicked(bool checked);
+    void columnHider(int state);
+    void fieldToggled();
+    void runToggled();
+    void on_clearSearchButton_clicked();
+    void on_findUp_clicked();
+    void on_findDown_clicked();
+    void on_searchAll_clicked();
+    void recentCycle();
+    void on_graph_clicked();
 
-private:
-  Ui::MainWindow *ui;
-  JsonTableModel *model;
-  QSortFilterProxyModel *proxyModel;
-  QMenu *viewMenu;
-  JsonTableModel::Header header;
+    protected:
+    // Window close event
+    void closeEvent(QCloseEvent *event);
+
+    private:
+    Ui::MainWindow *ui_;
+    JsonTableModel *model_;
+    QSortFilterProxyModel *proxyModel_;
+    QMenu *viewMenu_;
+    QMenu *nexusMenu_;
+    QMenu *runsMenu_;
+    JsonTableModel::Header header_;
+    QModelIndexList foundIndices_;
+    int currentFoundIndex_;
+    bool init_;
+    QChart *chart_;
 };
 #endif // MAINWINDOW_H
