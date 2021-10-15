@@ -14,7 +14,9 @@ void MainWindow::handle_result_instruments(HttpRequestWorker *worker)
     if (worker->error_type == QNetworkReply::NoError)
     {
         auto response = worker->response;
+        // Prevents unwanted firing
         ui->cyclesBox->blockSignals(true);
+        QString cycleText = ui->cyclesBox->currentText();
         ui->cyclesBox->clear();
         ui->cyclesBox->addItem("default");
         foreach (const QJsonValue &value, worker->json_array)
@@ -24,6 +26,16 @@ void MainWindow::handle_result_instruments(HttpRequestWorker *worker)
                 ui->cyclesBox->addItem(value.toString());
         }
         ui->cyclesBox->blockSignals(false);
+        // Keep cycle over instruments
+        int cycleIndex = ui->cyclesBox->findText(cycleText);
+        if (cycleIndex != -1)
+        {
+            ui->cyclesBox->setCurrentIndex(cycleIndex);
+        }
+        else
+        {
+            ui->cyclesBox->setCurrentIndex(ui->cyclesBox->count() - 1);
+        }
     }
     else
     {
@@ -80,10 +92,8 @@ void MainWindow::handle_result_cycles(HttpRequestWorker *worker)
 }
 
 // Update cycles list when Instrument changed
-void MainWindow::instrumentsBoxChange(const QString &arg1)
+void MainWindow::on_instrumentsBox_currentTextChanged(const QString &arg1)
 {
-    QSettings settings;
-    settings.setValue("recentInstrument", arg1);
     // Handle possible undesired calls
     if (arg1 == "default" || arg1 == "")
     {
@@ -106,8 +116,6 @@ void MainWindow::instrumentsBoxChange(const QString &arg1)
 // Populate table with cycle data
 void MainWindow::on_cyclesBox_currentTextChanged(const QString &arg1)
 {
-    QSettings settings;
-    settings.setValue("recentCycle", arg1);
     // Handle possible undesired calls
     if (arg1 == "default" || arg1 == "")
     {

@@ -4,28 +4,24 @@
 // Search table data
 void MainWindow::on_searchBox_textChanged(const QString &arg1)
 {
-    std::get<0>(matchesTuple).clear();
-    std::get<1>(matchesTuple) = 0;
+    foundIndices.clear();
+    currentFoundIndex = 0;
     if (arg1 == "")
     {
         ui->runDataTable->selectionModel()->clearSelection();
         return;
     }
-    // Find all occurences of search string in table elements
-    for (int i = 0; i < proxyModel->rowCount(); i++)
+    / Find all occurences of search string in table elements for (int i = 0; i < proxyModel->rowCount(); i++)
     {
         if (ui->runDataTable->isColumnHidden(i) == false)
         {
-            std::get<0>(matchesTuple)
-                .append(proxyModel->match(proxyModel->index(0, i), Qt::DisplayRole, arg1, -1, Qt::MatchContains));
+            foundIndices.append(proxyModel->match(proxyModel->index(0, i), Qt::DisplayRole, arg1, -1, Qt::MatchContains));
         }
     }
     // Select first match
-    if (std::get<0>(matchesTuple).size() > 0)
+    if (foundIndices.size() > 0)
     {
-        ui->runDataTable->selectionModel()->clearSelection();
-        ui->runDataTable->selectionModel()->setCurrentIndex(std::get<0>(matchesTuple)[0],
-                                                            QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        goToCurrentFoundIndex(foundIndices[0]);
     }
 }
 
@@ -33,19 +29,17 @@ void MainWindow::on_searchBox_textChanged(const QString &arg1)
 void MainWindow::on_findUp_clicked()
 {
     // Boundary/ error handling
-    if (std::get<0>(matchesTuple).size() > 0)
+    if (foundIndices.size() > 0)
     {
-        if (std::get<1>(matchesTuple) >= 1)
+        if (currentFoundIndex >= 1)
         {
-            std::get<1>(matchesTuple) -= 1;
+            currentFoundIndex -= 1;
         }
         else
         {
-            std::get<1>(matchesTuple) = 0;
+            currentFoundIndex = 0;
         }
-        ui->runDataTable->selectionModel()->clearSelection();
-        ui->runDataTable->selectionModel()->setCurrentIndex(std::get<0>(matchesTuple)[std::get<1>(matchesTuple)],
-                                                            QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        goToCurrentFoundIndex(foundIndices[currentFoundIndex]);
     }
 }
 
@@ -53,15 +47,13 @@ void MainWindow::on_findUp_clicked()
 void MainWindow::on_findDown_clicked()
 {
     // Boundary/ error handling
-    if (std::get<0>(matchesTuple).size() > 0)
+    if (foundIndices.size() > 0)
     {
-        if (std::get<1>(matchesTuple) < std::get<0>(matchesTuple).size() - 1)
+        if (currentFoundIndex < foundIndices.size() - 1)
         {
-            std::get<1>(matchesTuple) += 1;
+            currentFoundIndex += 1;
         }
-        ui->runDataTable->selectionModel()->clearSelection();
-        ui->runDataTable->selectionModel()->setCurrentIndex(std::get<0>(matchesTuple)[std::get<1>(matchesTuple)],
-                                                            QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        goToCurrentFoundIndex(foundIndices[currentFoundIndex]);
     }
 }
 
@@ -69,14 +61,18 @@ void MainWindow::on_findDown_clicked()
 void MainWindow::on_searchAll_clicked()
 {
     // Error handling
-    if (std::get<0>(matchesTuple).size() > 0)
+    if (foundIndices.size() > 0)
     {
         ui->runDataTable->selectionModel()->clearSelection();
-        std::get<1>(matchesTuple) = -1;
-        for (int i = 0; i < std::get<0>(matchesTuple).size(); i++)
+        currentFoundIndex = -1;
+        for (int i = 0; i < foundIndices.size(); i++)
         {
-            ui->runDataTable->selectionModel()->setCurrentIndex(std::get<0>(matchesTuple)[i],
+            ui->runDataTable->selectionModel()->setCurrentIndex(foundIndices[i],
                                                                 QItemSelectionModel::Select | QItemSelectionModel::Rows);
         }
     }
+}
+void MainWindow::goToCurrentFoundIndex(QModelIndex index)
+{
+    ui->runDataTable->selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }

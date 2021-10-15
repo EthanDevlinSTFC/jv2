@@ -29,9 +29,7 @@ class MainWindow : public QMainWindow
     // Start-up functions
     void fillInstruments();
     void initialiseElements();
-    // Multi-File test
-    void test();
-
+    void goToCurrentFoundIndex(QModelIndex index);
     private slots:
     /*
       Filtering
@@ -47,7 +45,7 @@ class MainWindow : public QMainWindow
     // Data gathering
     void handle_result_instruments(HttpRequestWorker *worker);
     void handle_result_cycles(HttpRequestWorker *worker);
-    void instrumentsBoxChange(const QString &arg1);
+    void on_instrumentsBox_currentTextChanged(const QString &arg1);
     void on_cyclesBox_currentTextChanged(const QString &arg1);
     // Searching
     void on_searchBox_textChanged(const QString &arg1);
@@ -57,13 +55,18 @@ class MainWindow : public QMainWindow
     // Start-up functions
     void recentCycle();
 
+    protected:
+    // Window close event
+    void closeEvent(QCloseEvent *event);
+
     private:
     Ui::MainWindow *ui;
     JsonTableModel *model;
     QSortFilterProxyModel *proxyModel;
     QMenu *viewMenu;
     JsonTableModel::Header header;
-    std::tuple<QModelIndexList, int> matchesTuple;
+    QModelIndexList foundIndices;
+    int currentFoundIndex;
     bool init;
 };
 #endif // MAINWINDOW_H

@@ -3,11 +3,10 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "jsontablemodel.h"
-#include "test.cpp"
-#include "searching.cpp"
 #include "datagathering.cpp"
 #include "filtering.cpp"
+#include "jsontablemodel.h"
+#include "searching.cpp"
 #include <QCheckBox>
 #include <QDebug>
 #include <QJsonArray>
@@ -24,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
     initialiseElements();
-    test();
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -53,7 +51,7 @@ void MainWindow::initialiseElements()
     }
     else
     {
-        ui->instrumentsBox->setCurrentIndex(0);
+        ui->instrumentsBox->setCurrentIndex(ui->instrumentsBox->count() - 1);
     }
     // Sets cycle to most recently viewed
     recentCycle();
@@ -74,7 +72,7 @@ void MainWindow::recentCycle()
         }
         else if (ui->cyclesBox->currentText() != "default" && ui->cyclesBox->currentText() != "")
         {
-            ui->cyclesBox->setCurrentIndex(ui->cyclesBox->count());
+            ui->cyclesBox->setCurrentIndex(ui->cyclesBox->count() - 1);
         }
     }
     else
@@ -87,13 +85,12 @@ void MainWindow::recentCycle()
 void MainWindow::fillInstruments()
 {
     QList<QString> instruments = {"default", "merlin", "nimrod", "sandals", "iris"};
+    // Only allow calls after initial population
+    ui->instrumentsBox->blockSignals(true);
     ui->instrumentsBox->clear();
     foreach (const QString instrument, instruments)
     {
         ui->instrumentsBox->addItem(instrument);
     }
-    // Only allow calls after initial population
-    connect(ui->instrumentsBox, SIGNAL(currentTextChanged(const QString)), this, SLOT(instrumentsBoxChange(const QString)));
+    ui->instrumentsBox->blockSignals(false);
 }
-
-
