@@ -6,6 +6,8 @@
 #include "jsontablemodel.h"
 #include "test.cpp"
 #include "searching.cpp"
+#include "datagathering.cpp"
+#include "filtering.cpp"
 #include <QCheckBox>
 #include <QDebug>
 #include <QJsonArray>
@@ -26,31 +28,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 MainWindow::~MainWindow() { delete ui; }
-
-// Hide column on view menu change
-void MainWindow::columnHider(int state)
-{
-    QCheckBox *action = qobject_cast<QCheckBox *>(sender());
-
-    for (int i = 0; i < ui->runDataTable->horizontalHeader()->count(); i++)
-    {
-        if (action->text() == ui->runDataTable->horizontalHeader()->model()->headerData(i, Qt::Horizontal))
-        {
-            switch (action->checkState())
-            {
-                case Qt::Unchecked:
-                    ui->runDataTable->setColumnHidden(i, true);
-                    break;
-                case Qt::Checked:
-                    ui->runDataTable->setColumnHidden(i, false);
-                    break;
-                default:
-                    ui->runDataTable->setColumnHidden(i, false);
-            }
-            break;
-        }
-    }
-}
 
 // Configure initial application state
 void MainWindow::initialiseElements()
@@ -119,144 +96,4 @@ void MainWindow::fillInstruments()
     connect(ui->instrumentsBox, SIGNAL(currentTextChanged(const QString)), this, SLOT(instrumentsBoxChange(const QString)));
 }
 
-// Update cycles list when Instrument changed
-void MainWindow::instrumentsBoxChange(const QString &arg1)
-{
-    QSettings settings;
-    settings.setValue("recentInstrument", arg1);
-    // Handle possible undesired calls
-    if (arg1 == "default" || arg1 == "")
-    {
-        ui->cyclesBox->clear();
-        ui->cyclesBox->addItem("default");
-        ui->filterBox->setEnabled(false);
-        ui->searchBox->setEnabled(false);
-        return;
-    }
-    // Configure api call
-    QString url_str = "http://127.0.0.1:5000/getCycles/" + arg1;
-    HttpRequestInput input(url_str);
-    HttpRequestWorker *worker = new HttpRequestWorker(this);
-    // Call result handler when request completed
-    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
-            SLOT(handle_result_instruments(HttpRequestWorker *)));
-    worker->execute(&input);
-}
 
-// Populate table with cycle data
-void MainWindow::on_cyclesBox_currentTextChanged(const QString &arg1)
-{
-    QSettings settings;
-    settings.setValue("recentCycle", arg1);
-    // Handle possible undesired calls
-    if (arg1 == "default" || arg1 == "")
-    {
-        ui->filterBox->setEnabled(false);
-        ui->searchBox->setEnabled(false);
-        return;
-    }
-    ui->filterBox->setEnabled(true);
-    ui->searchBox->setEnabled(true);
-    QString url_str = "http://127.0.0.1:5000/getJournal/" + ui->instrumentsBox->currentText() + "/" + arg1;
-    HttpRequestInput input(url_str);
-    HttpRequestWorker *worker = new HttpRequestWorker(this);
-    // Call result handler when request completed
-    connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this, SLOT(handle_result_cycles(HttpRequestWorker *)));
-    worker->execute(&input);
-}
-
-// Filter table data
-void MainWindow::on_filterBox_textChanged(const QString &arg1)
-{
-    proxyModel->setFilterFixedString(arg1.trimmed());
-    proxyModel->setFilterKeyColumn(-1);
-    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-}
-
-// Fills cycles box on request completion
-void MainWindow::handle_result_instruments(HttpRequestWorker *worker)
-{
-    QString msg;
-    if (worker->error_type == QNetworkReply::NoError)
-    {
-        auto response = worker->response;
-        ui->cyclesBox->blockSignals(true);
-        ui->cyclesBox->clear();
-        ui->cyclesBox->addItem("default");
-        foreach (const QJsonValue &value, worker->json_array)
-        {
-            // removes header file
-            if (value.toString() != "journal.xml")
-                ui->cyclesBox->addItem(value.toString());
-        }
-        ui->cyclesBox->blockSignals(false);
-    }
-    else
-    {
-        // an error occurred
-        msg = "Error1: " + worker->error_str;
-        QMessageBox::information(this, "", msg);
-    }
-    if (init)
-    {
-        recentCycle();
-        init = false;
-    }
-}
-
-// Fills table view with run
-void MainWindow::handle_result_cycles(HttpRequestWorker *worker)
-{
-    QString msg;
-
-    if (worker->error_type == QNetworkReply::NoError)
-    {
-        // Get keys from json data
-        auto jsonArray = worker->json_array;
-        auto jsonObject = jsonArray.at(0).toObject();
-        header.clear();
-        viewMenu->clear();
-        foreach (const QString &key, jsonObject.keys())
-        {
-            header.push_back(JsonTableModel::Heading({{"title", key}, {"index", key}}));
-
-            // Fills viewMenu with all columns
-            QCheckBox *checkBox = new QCheckBox(viewMenu);
-            QWidgetAction *checkableAction = new QWidgetAction(viewMenu);
-            checkableAction->setDefaultWidget(checkBox);
-            checkBox->setText(key);
-            checkBox->setCheckState(Qt::Checked);
-            connect(checkBox, SIGNAL(stateChanged(int)), this, SLOT(columnHider(int)));
-            viewMenu->addAction(checkableAction);
-        }
-        // Sets and fills table data
-        model = new JsonTableModel(header, this);
-        proxyModel = new QSortFilterProxyModel;
-        proxyModel->setSourceModel(model);
-        ui->runDataTable->setModel(proxyModel);
-        model->setJson(jsonArray);
-        ui->runDataTable->show();
-    }
-    else
-    {
-        // an error occurred
-        msg = "Error2: " + worker->error_str;
-        QMessageBox::information(this, "", msg);
-    }
-}
-
-// Groups table data
-void MainWindow::on_groupButton_clicked(bool checked)
-{
-    if (checked)
-    {
-        model->groupData();
-    }
-    else
-    {
-        model->unGroupData();
-    }
-}
-
-// Clears filter parameters
-void MainWindow::on_clearSearchButton_clicked() { ui->filterBox->clear(); }

@@ -33,18 +33,22 @@ class MainWindow : public QMainWindow
     void test();
 
     private slots:
+    /*
+      Filtering
+    */
     // Filtering
     void on_filterBox_textChanged(const QString &arg1);
     void on_clearSearchButton_clicked();
+    // Grouping
+    void on_groupButton_clicked(bool checked);
+    // ViewMenu column hider
+    void columnHider(int state);
+
     // Data gathering
     void handle_result_instruments(HttpRequestWorker *worker);
     void handle_result_cycles(HttpRequestWorker *worker);
     void instrumentsBoxChange(const QString &arg1);
     void on_cyclesBox_currentTextChanged(const QString &arg1);
-    // Grouping
-    void on_groupButton_clicked(bool checked);
-    // ViewMenu column hider
-    void columnHider(int state);
     // Searching
     void on_searchBox_textChanged(const QString &arg1);
     void on_findUp_clicked();
