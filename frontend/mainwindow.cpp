@@ -61,6 +61,11 @@ void MainWindow::initialiseElements()
 void MainWindow::recentCycle()
 {
     QSettings settings;
+    if (ui_->cyclesBox->count() == 0){
+      ui_->instrumentsBox->clear();
+      ui_->instrumentsBox->setEnabled(false);
+      ui_->cyclesBox->setEnabled(false);
+    }
     QString recentCycle = settings.value("recentCycle").toString();
     auto cycleIndex = ui_->cyclesBox->findText(recentCycle);
 
