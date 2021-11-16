@@ -48,7 +48,6 @@ class MainWindow : public QMainWindow
     void on_searchAll_clicked();
     void recentCycle();
     void on_graph_clicked();
-
     protected:
     // Window close event
     void closeEvent(QCloseEvent *event);
