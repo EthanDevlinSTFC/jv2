@@ -61,12 +61,16 @@ void MainWindow::on_graph_clicked()
     auto *worker = new HttpRequestWorker(this);
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
             SLOT(handle_result_fieldQuery(HttpRequestWorker *)));
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QWidget::setEnabled(false);
     worker->execute(input);
 }
 
 // Fills field menu
 void MainWindow::handle_result_fieldQuery(HttpRequestWorker *worker)
 {
+    QWidget::setEnabled(true);
+    QGuiApplication::restoreOverrideCursor();
     QString msg;
 
     if (worker->error_type == QNetworkReply::NoError)
@@ -129,6 +133,8 @@ void MainWindow::fieldToggled()
         auto *worker = new HttpRequestWorker(this);
         connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
                 SLOT(handle_result_logData(HttpRequestWorker *)));
+        QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        QWidget::setEnabled(false);
         worker->execute(input);
     }
 }
@@ -171,6 +177,8 @@ void MainWindow::runToggled()
         auto *worker = new HttpRequestWorker(this);
         connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
                 SLOT(handle_result_logData(HttpRequestWorker *)));
+        QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        QWidget::setEnabled(false);
         worker->execute(input);
     }
 }
@@ -178,6 +186,8 @@ void MainWindow::runToggled()
 // Handles log data
 void MainWindow::handle_result_logData(HttpRequestWorker *worker)
 {
+    QWidget::setEnabled(true);
+    QGuiApplication::restoreOverrideCursor();
     QString msg;
     if (worker->error_type == QNetworkReply::NoError)
     {
@@ -254,12 +264,16 @@ void MainWindow::customMenuRequested(QPoint pos)
     auto *worker = new HttpRequestWorker(this);
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
             SLOT(handle_result_contextMenu(HttpRequestWorker *)));
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QWidget::setEnabled(false);
     worker->execute(input);
 }
 
 // Fills field menu
 void MainWindow::handle_result_contextMenu(HttpRequestWorker *worker)
 {
+    QWidget::setEnabled(true);
+    QGuiApplication::restoreOverrideCursor();
     QString msg;
 
     if (worker->error_type == QNetworkReply::NoError)
@@ -342,12 +356,16 @@ void MainWindow::contextGraph()
     auto *worker = new HttpRequestWorker(this);
     connect(worker, SIGNAL(on_execution_finished(HttpRequestWorker *)), this,
             SLOT(handle_result_contextGraph(HttpRequestWorker *)));
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    QWidget::setEnabled(false);
     worker->execute(input);
 }
 
 // Handles log data
 void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
 {
+    QWidget::setEnabled(true);
+    QGuiApplication::restoreOverrideCursor();
     auto *contextChartView = new QChartView();
     auto *contextChart = new QChart();
 

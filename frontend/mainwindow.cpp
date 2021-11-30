@@ -86,6 +86,7 @@ void MainWindow::recentCycle()
     if (ui_->cyclesBox->count() == 0)
     {
         ui_->instrumentsBox->clear();
+        QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
         QWidget::setEnabled(false);
     }
     QSettings settings;
