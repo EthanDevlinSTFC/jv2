@@ -186,6 +186,15 @@ void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
         auto *absTimeStringAxis = new QCategoryAxis();
         absTimeChart->addAxis(absTimeStringAxis, Qt::AlignLeft);
 
+        auto *valueAxis2 = new QValueAxis();
+        auto *absTimeAxis2 = new QValueAxis();
+        auto *stringAxis2 = new QCategoryAxis();
+        contextChart2->addAxis(valueAxis2, Qt::AlignLeft);
+        contextChart2->addAxis(absTimeAxis2, Qt::AlignBottom);
+        absTimeAxis2->setTitleText("Absolute Time");
+        contextChart2->addAxis(stringAxis2, Qt::AlignLeft);
+        
+
         bool firstRun = true;
         // For each Run
         foreach (const auto &runFields, worker->json_array)
@@ -249,6 +258,11 @@ void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
                         startTime.addSecs(startTime.secsTo(QDateTime::fromMSecsSinceEpoch(dateSeries->at(0).x()))));
                 if (endTime > timeAxis->max())
                     timeAxis->setMax(endTime);
+                
+                if (series2->at(0).x() < absTimeAxis2->min())
+                    absTimeAxis2->setMin(series2->at(0).x());
+                if (series2->at(series2->count()-1).x() > absTimeAxis2->max())
+                    absTimeAxis2->setMax(series2->at(series2->count()-1).x());
 
                 if (absSeries->at(0).x() < absTimeXAxis->min())
                     absTimeXAxis->setMin(absSeries->at(0).x());
