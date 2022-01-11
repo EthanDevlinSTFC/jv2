@@ -336,6 +336,15 @@
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFind">
+    <property name="title">
+     <string>Find</string>
+    </property>
+    <addaction name="actionRB_No"/>
+    <addaction name="actionTitle"/>
+    <addaction name="actionUser"/>
+   </widget>
+   <addaction name="menuFind"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionRB_No">
