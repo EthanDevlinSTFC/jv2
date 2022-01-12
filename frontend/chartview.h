@@ -33,6 +33,8 @@ class ChartView : public QChartView
     QPointF lastMousePos_;
     bool first_;
     bool hovered_;
+    QGraphicsSimpleTextItem *coordLabelX_;
+    QGraphicsSimpleTextItem *coordLabelY_;
 };
 
 #endif // CHARTVIEW_H
