@@ -12,6 +12,7 @@ ChartView::ChartView(QChart *chart, QWidget *parent) : QChartView(chart, parent)
     setDragMode(QGraphicsView::NoDrag);
     this->setMouseTracking(true);
     first_ = true;
+    hovered_ = false;
 }
 
 void ChartView::keyPressEvent(QKeyEvent *event)
@@ -97,6 +98,8 @@ void ChartView::mouseReleaseEvent(QMouseEvent *event)
     QChartView::mouseReleaseEvent(event);
 }
 
+void ChartView::setHovered(const QPointF point, bool hovered) { hovered_ = hovered; }
+
 void ChartView::mouseMoveEvent(QMouseEvent *event)
 {
     // pan the chart with a middle mouse drag
@@ -107,6 +110,21 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
 
         lastMousePos_ = event->pos();
         event->accept();
+    }
+    else
+    {
+        if (hovered_)
+        {
+            QPointF inPoint;
+            QPointF chartPoint;
+            inPoint.setX(event->position().x());
+            inPoint.setY(event->position().y());
+            chartPoint = chart()->mapToValue(inPoint);
+            emit showCoordinates(chartPoint.x(), chartPoint.y());
+            event->accept();
+        }
+        else
+            emit clearCoordinates();
     }
 
     QChartView::mouseMoveEvent(event);

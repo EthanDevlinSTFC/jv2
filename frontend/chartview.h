@@ -9,8 +9,17 @@
 
 class ChartView : public QChartView
 {
+    Q_OBJECT
+
     public:
     ChartView(QChart *chart, QWidget *parent = 0);
+
+    public slots:
+    void setHovered(const QPointF point, bool hovered);
+
+    signals:
+    void showCoordinates(qreal x, qreal y);
+    void clearCoordinates();
 
     protected:
     void keyPressEvent(QKeyEvent *event);
@@ -23,6 +32,7 @@ class ChartView : public QChartView
     private:
     QPointF lastMousePos_;
     bool first_;
+    bool hovered_;
 };
 
 #endif // CHARTVIEW_H
