@@ -129,6 +129,8 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
 
         qreal maxX;
         qreal minX;
+        qreal maxY;
+        qreal minY;
         if (chart()->axes(Qt::Horizontal)[0]->type() == QAbstractAxis::AxisTypeValue)
         {
             QValueAxis *axis = qobject_cast<QValueAxis *>(chart()->axes(Qt::Horizontal)[0]);
@@ -141,8 +143,16 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
             maxX = axis->max().toMSecsSinceEpoch();
             minX = axis->min().toMSecsSinceEpoch();
         }
-        qreal maxY = qobject_cast<QValueAxis *>(chart()->axes(Qt::Vertical)[0])->max();
-        qreal minY = qobject_cast<QValueAxis *>(chart()->axes(Qt::Vertical)[0])->min();
+        if (chart()->axes(Qt::Vertical)[0]->type() == QAbstractAxis::AxisTypeCategory)
+        {
+            maxY = yVal;
+            minY = yVal;
+        }
+        else
+        {
+            maxY = qobject_cast<QValueAxis *>(chart()->axes(Qt::Vertical)[0])->max();
+            minY = qobject_cast<QValueAxis *>(chart()->axes(Qt::Vertical)[0])->min();
+        }
 
         if (xVal <= maxX && xVal >= minX && yVal <= maxY && yVal >= minY)
         {
@@ -156,7 +166,10 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
                 coordLabelX_->setText(QString::number(xVal));
             else
                 coordLabelX_->setText(QDateTime::fromMSecsSinceEpoch(xVal).toString("yyyy-MM-dd HH:mm:ss"));
-            coordLabelY_->setText(QString::number(yVal));
+            if (chart()->axes(Qt::Vertical)[0]->type() == QAbstractAxis::AxisTypeCategory)
+                coordLabelY_->setText(NULL);
+            else
+                coordLabelY_->setText(QString::number(yVal));
         }
     }
     else
