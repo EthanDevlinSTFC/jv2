@@ -186,6 +186,7 @@ void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
         auto *absTimeStringAxis = new QCategoryAxis();
         absTimeChart->addAxis(absTimeStringAxis, Qt::AlignLeft);
 
+        QList<QString> chartFields;
         bool firstRun = true;
         // For each Run
         foreach (const auto &runFields, worker->json_array)
@@ -213,7 +214,10 @@ void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
                 auto *absSeries = new QLineSeries();
 
                 // Set dateSeries ID
-                QString name = fieldDataArray.first()[0].toString() + " " + fieldDataArray.first()[1].toString();
+                QString name = fieldDataArray.first()[0].toString();
+                QString field = fieldDataArray.first()[1].toString().section(':', -1);
+                if (!chartFields.contains(field))
+                    chartFields.append(field);
                 dateSeries->setName(name);
                 absSeries->setName(name);
                 fieldDataArray.removeFirst();
@@ -298,7 +302,14 @@ void MainWindow::handle_result_contextGraph(HttpRequestWorker *worker)
         gridLayout->addWidget(absTimeChartView, 1, 0, -1, -1);
         absTimeChartView->hide();
         gridLayout->addWidget(axisToggleCheck, 0, 0);
-        ui_->tabWidget->addTab(window, "graph");
+        QString tabName;
+        for (auto i = 0; i < chartFields.size(); i++)
+        {
+            tabName += chartFields[i];
+            if (i < chartFields.size() - 1)
+                tabName += ",";
+        }
+        ui_->tabWidget->addTab(window, tabName);
         ui_->tabWidget->setCurrentIndex(ui_->tabWidget->count() - 1);
     }
     else
