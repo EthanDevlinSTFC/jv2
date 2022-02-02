@@ -116,6 +116,8 @@ void MainWindow::handle_result_cycles(HttpRequestWorker *worker)
             }
         }
         ui_->runDataTable->resizeColumnsToContents();
+        on_searchBox_textChanged(searchString_);
+        ui_->filterBox->clear();
         emit tableFilled();
     }
     else
@@ -149,7 +151,6 @@ void MainWindow::on_cyclesBox_currentTextChanged(const QString &arg1)
     // Handle possible undesired calls
     ui_->cyclesBox->setDisabled(arg1.isEmpty());
     ui_->filterBox->setDisabled(arg1.isEmpty());
-    ui_->searchBox->setDisabled(arg1.isEmpty());
     if (arg1.isEmpty())
         return;
 
