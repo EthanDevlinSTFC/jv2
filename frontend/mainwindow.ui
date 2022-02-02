@@ -319,15 +319,24 @@
    <property name="text">
     <string>Find Next (F3)</string>
    </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
   </action>
   <action name="actionSelectPrevious">
    <property name="text">
     <string>Find Previous (Shift + F3)</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+F3</string>
+   </property>
   </action>
   <action name="actionSelectAll">
    <property name="text">
     <string>Select All Occurances (Ctrl + F3)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F3</string>
    </property>
   </action>
   <action name="actionRun_Number">

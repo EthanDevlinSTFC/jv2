@@ -181,19 +181,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         updateSearch(searchString_);
         return;
     }
-    if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::ControlModifier)
-    {
-        selectAllSearches();
-        return;
-    }
-    if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::ShiftModifier)
-    {
-        findUp();
-        return;
-    }
-    if (event->key() == Qt::Key_F3)
-        findDown();
-        return;
     event->accept();
 }
 
