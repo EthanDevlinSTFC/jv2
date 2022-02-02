@@ -117,7 +117,7 @@ void MainWindow::fillInstruments(QList<QPair<QString, QString>> instruments)
 void MainWindow::changeInst(QPair<QString, QString> instrument)
 {
     ui_->instrumentButton->setText(instrument.first.toUpper());
-    on_instrumentsBox_currentTextChanged(instrument.first);
+    currentInstrumentChanged(instrument.first);
     instType_ = instrument.second;
     instName_ = instrument.first;
 }
@@ -175,38 +175,26 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         ui_->groupButton->setChecked(!checked);
         on_groupButton_clicked(!checked);
     }
-    if (event->key() == Qt::Key_F && event->modifiers() == Qt::ControlModifier)
-    {
-        on_actionSearch_triggered();
-        return;
-    }
     if (event->key() == Qt::Key_F && event->modifiers() & Qt::ControlModifier && Qt::ShiftModifier)
     {
         searchString_ = "";
-        on_searchBox_textChanged(searchString_);
+        updateSearch(searchString_);
         return;
     }
     if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::ControlModifier)
     {
-        on_searchAll_clicked();
+        selectAllSearches();
         return;
     }
     if (event->key() == Qt::Key_F3 && event->modifiers() == Qt::ShiftModifier)
     {
-        on_findUp_clicked();
+        findUp();
         return;
     }
     if (event->key() == Qt::Key_F3)
-        on_findDown_clicked();
+        findDown();
         return;
     event->accept();
-}
-
-void MainWindow::on_closeFind_clicked()
-{
-    if (statusBar()->currentMessage() != "")
-        ui_->runDataTable->selectionModel()->clearSelection();
-    statusBar()->clearMessage();
 }
 
 QList<QPair<QString, QString>> MainWindow::getInstruments()

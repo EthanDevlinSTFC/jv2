@@ -7,7 +7,7 @@
 #include <QInputDialog>
 
 // Search table data
-void MainWindow::on_searchBox_textChanged(const QString &arg1)
+void MainWindow::updateSearch(const QString &arg1)
 {
     foundIndices_.clear();
     currentFoundIndex_ = 0;
@@ -39,7 +39,7 @@ void MainWindow::on_searchBox_textChanged(const QString &arg1)
 }
 
 // Select previous match
-void MainWindow::on_findUp_clicked()
+void MainWindow::findUp()
 {
     // Boundary/ error handling
     if (foundIndices_.size() > 0)
@@ -55,7 +55,7 @@ void MainWindow::on_findUp_clicked()
 }
 
 // Select next match
-void MainWindow::on_findDown_clicked()
+void MainWindow::findDown()
 {
     // Boundary/ error handling
     if (foundIndices_.size() > 0)
@@ -69,7 +69,7 @@ void MainWindow::on_findDown_clicked()
 }
 
 // Select all matches
-void MainWindow::on_searchAll_clicked()
+void MainWindow::selectAllSearches()
 {
     // Error handling
     if (foundIndices_.size() > 0)
@@ -95,7 +95,7 @@ void MainWindow::selectIndex(QString runNumber)
 {
     ui_->runDataTable->selectionModel()->clearSelection();
 
-    on_searchBox_textChanged(runNumber);
+    updateSearch(runNumber);
     statusBar()->showMessage("Found run " + runNumber + " in " + ui_->cyclesBox->currentText(), 5000);
     disconnect(this, &MainWindow::tableFilled, nullptr, nullptr);
 }
@@ -152,6 +152,6 @@ void MainWindow::on_actionSearch_triggered()
     }
 }
 
-void MainWindow::on_actionSelectNext_triggered() { on_findDown_clicked(); }
-void MainWindow::on_actionSelectPrevious_triggered() { on_findUp_clicked(); }
-void MainWindow::on_actionSelectAll_triggered() { on_searchAll_clicked(); }
+void MainWindow::on_actionSelectNext_triggered() { findDown(); }
+void MainWindow::on_actionSelectPrevious_triggered() { findUp(); }
+void MainWindow::on_actionSelectAll_triggered() { selectAllSearches(); }

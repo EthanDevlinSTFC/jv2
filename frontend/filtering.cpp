@@ -40,7 +40,7 @@ void MainWindow::on_filterBox_textChanged(const QString &arg1)
     proxyModel_->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
     // Update search to new data
-    on_searchBox_textChanged(searchString_);
+    updateSearch(searchString_);
 }
 
 // Groups table data
@@ -81,7 +81,7 @@ void MainWindow::on_groupButton_clicked(bool checked)
         }
         ui_->runDataTable->resizeColumnsToContents();
     }
-    on_searchBox_textChanged(searchString_);
+    updateSearch(searchString_);
 }
 
 // Clears filter parameters

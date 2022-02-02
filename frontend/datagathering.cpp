@@ -116,7 +116,7 @@ void MainWindow::handle_result_cycles(HttpRequestWorker *worker)
             }
         }
         ui_->runDataTable->resizeColumnsToContents();
-        on_searchBox_textChanged(searchString_);
+        updateSearch(searchString_);
         ui_->filterBox->clear();
         emit tableFilled();
     }
@@ -129,7 +129,7 @@ void MainWindow::handle_result_cycles(HttpRequestWorker *worker)
 }
 
 // Update cycles list when Instrument changed
-void MainWindow::on_instrumentsBox_currentTextChanged(const QString &arg1)
+void MainWindow::currentInstrumentChanged(const QString &arg1)
 {
     cachedMassSearch_.clear();
 

@@ -36,15 +36,14 @@ class MainWindow : public QMainWindow
     void setLoadScreen(bool state);
     private slots:
     // Search Controls
-    void on_searchBox_textChanged(const QString &arg1);
+    void updateSearch(const QString &arg1);
     void on_actionSearch_triggered();
     void on_actionSelectNext_triggered();
     void on_actionSelectPrevious_triggered();
     void on_actionSelectAll_triggered();
-    void on_findUp_clicked();
-    void on_findDown_clicked();
-    void on_searchAll_clicked();
-    void on_closeFind_clicked();
+    void findUp();
+    void findDown();
+    void selectAllSearches();
     void selectIndex(QString runNumber);
     void selectSimilar();
     // Filter Controls
@@ -60,7 +59,7 @@ class MainWindow : public QMainWindow
     // Data Selection
     void handle_result_instruments(HttpRequestWorker *worker);
     void handle_result_cycles(HttpRequestWorker *worker);
-    void on_instrumentsBox_currentTextChanged(const QString &arg1);
+    void currentInstrumentChanged(const QString &arg1);
     void on_cyclesBox_currentTextChanged(const QString &arg1);
     void recentCycle();
     void changeInst(QPair<QString, QString> instrument);
