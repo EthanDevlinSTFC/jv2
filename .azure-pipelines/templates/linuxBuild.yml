@@ -104,4 +104,4 @@ steps:
       mkdir -p packages
       cp result packages/${{ parameters.package }}-${VERSION}.sif
     displayName: 'Package Singularity'
-    condition: eq(1,0)
+    condition: eq(1,1)
