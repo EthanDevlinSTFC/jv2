@@ -14,6 +14,8 @@ steps:
       brew update-reset
       brew install ninja
       brew install qt
+      brew install glfw3
+      brew install glew
       pip3 install pyinstaller
       pip3 install flask
       pip3 install h5py
