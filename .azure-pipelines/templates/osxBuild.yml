@@ -14,6 +14,9 @@ steps:
       brew update-reset
       brew install ninja
       brew install qt
+      brew install libgl1-mesa-dev
+      brew install mesa-utils-extra
+      brew install freeglut3-dev
       pip3 install pyinstaller
       pip3 install flask
       pip3 install h5py
