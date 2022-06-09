@@ -31,6 +31,7 @@ steps:
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
       QT_INSTALL_DIR=/usr/local/Cellar/qt
+      GLFW_INSTALL_DIR=/usr/local/Cellar/glfw
       QTVER=`ls -d ${QT_INSTALL_DIR}/* | sed "s/.*\(6\.[0-9][0-9]\.[0-9]\)/\1/g"`
       export Qt6_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6
       export Qt6Core_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Core
@@ -43,7 +44,8 @@ steps:
       # Building
       mkdir build
       cd build
-      cmake ../ -G Ninja -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }}
+      
+      cmake ../ -G Ninja -S ${GLFW_INSTALL_DIR} -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }}
       ninja
 
       cd ../
