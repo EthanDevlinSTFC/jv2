@@ -45,9 +45,9 @@ steps:
       mkdir build
       cd build
       
-      cmake ../ -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR} -lglfw -framework OpenGL
+      cmake ../ -DLOCAL_STATIC_HDF5:bool=True -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR} -lglfw
       make
-      cmake ../ -G Ninja -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR} -lglfw -framework OpenGL
+      cmake ../ -G Ninja -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR} -lglfw
       ninja
 
       cd ../
