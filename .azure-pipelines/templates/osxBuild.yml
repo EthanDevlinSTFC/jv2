@@ -40,7 +40,7 @@ steps:
       mkdir build
       cd build
 
-      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_INSTALL_DIR}/$QTVER/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR
+      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_BASE_DIR}/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR
       ninja
 
       cd ../
