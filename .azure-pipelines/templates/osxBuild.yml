@@ -13,6 +13,9 @@ steps:
       set -ex
       brew update-reset
       brew install ninja
+      brew install qt
+      brew install glfw3
+      brew install glew
       pip3 install pyinstaller
       pip3 install flask
       pip3 install h5py
@@ -28,14 +31,15 @@ steps:
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
       QT_INSTALL_DIR=/usr/local/Cellar/qt
+      GLFW_INSTALL_DIR=/usr/local/Cellar/glfw
       QTVER=`ls -d ${QT_INSTALL_DIR}/* | sed "s/.*\(6\.[0-9][0-9]\.[0-9]\)/\1/g"`
-      Qt6_ROOT=${QT_INSTALL_DIR}/${QTVER}/macos
+      Qt6_ROOT=${QT_INSTALL_DIR}/${QTVER}
       PATH="${Qt6_DIR}:${PATH}"
       # Building
       mkdir build
       cd build
 
-      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_INSTALL_DIR}/$QTVER/macos/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DQT_BASE_DIR=$Qt6_ROOT ${{ parameters.extraflags }}
+      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_INSTALL_DIR}/$QTVER/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" ${{ parameters.extraflags }}
       ninja
 
       cd ../
