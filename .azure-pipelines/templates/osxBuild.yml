@@ -7,6 +7,8 @@ parameters:
     default: true
   - name: threading
     default: true
+  - name: qtver
+    default: 6.2.2
 
 steps:
   - bash: |
