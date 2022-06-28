@@ -33,22 +33,13 @@ steps:
       QT_INSTALL_DIR=/usr/local/Cellar/qt
       GLFW_INSTALL_DIR=/usr/local/Cellar/glfw
       QTVER=`ls -d ${QT_INSTALL_DIR}/* | sed "s/.*\(6\.[0-9][0-9]\.[0-9]\)/\1/g"`
-      export Qt6_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6
-      export Qt6Core_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Core
-      export Qt6Widgets_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Widgets
-      export Qt6Network_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Network
-      export Qt6PrintSupport_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6PrintSupport
-      export Qt6Gui_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Gui
-      export Qt6Svg_DIR=${QT_INSTALL_DIR}/$QTVER/lib/cmake/Qt6Svg
       Qt6_ROOT=${QT_INSTALL_DIR}/${QTVER}
       PATH="${Qt6_DIR}:${PATH}"
       # Building
       mkdir build
       cd build
-      
-      cmake ../ -DLOCAL_STATIC_HDF5:bool=True -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR}
-      make
-      cmake ../ -G Ninja -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }} -DCMAKE_PREFIX_PATH:path=${Qt6_DIR}
+
+      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_INSTALL_DIR}/$QTVER/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" -DLOCAL_STATIC_HDF5:bool=True -DHDF5_DIR:path=${HDF5_DIR} ${{ parameters.extraflags }}
       ninja
 
       cd ../
