@@ -22,7 +22,7 @@ steps:
 
       # -- Qt
       sudo pip3 install aqtinstall
-      aqt install-qt --outputdir /tmp/qt mac desktop ${{ parameters.qtver }} -m qtcharts
+      aqt install-qt --outputdir /tmp/qt mac desktop ${{ parameters.qtver }} -m all
     displayName: 'Install Prerequisites'
   - bash: |
       wget https://github.com/disorderedmaterials/HDF5/releases/download/${{ parameters.hdf5tag }}/${{ parameters.hdf5tag }}-osx.zip
