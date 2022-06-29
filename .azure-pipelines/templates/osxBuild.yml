@@ -34,18 +34,10 @@ steps:
       set -ex
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
-      export QTVER=${{ parameters.qtver }}
-      export QT_INSTALL_DIR=/tmp/qt
-      export Qt6_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6
-      export QT_BASE_DIR=/tmp/qt/${QTVER}/macos
-      export Qt6Core_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Core
-      export Qt6CoreTools_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6CoreTools
-      export Qt6Widgets_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Widgets
-      export Qt6WidgetsTools_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6WidgetsTools
-      export Qt6Network_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Network
-      export Qt6PrintSupport_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6PrintSupport
-      export Qt6Gui_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Gui
-      export Qt6Svg_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Svg
+      QTVER=${{ parameters.qtver }}
+      QT_INSTALL_DIR=/tmp/qt
+      Qt6_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6
+      QT_BASE_DIR=/tmp/qt/${QTVER}/macos
       
       # Building
       mkdir build
