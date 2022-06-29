@@ -38,7 +38,7 @@ steps:
       # Building
       mkdir build
       cd build
-
+      conan install .. --build missing
       cmake -DGUI:bool=true ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR ../
       make
 
