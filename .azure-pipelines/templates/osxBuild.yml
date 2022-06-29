@@ -34,10 +34,17 @@ steps:
       set -ex
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
-      QT_INSTALL_DIR=/tmp/qt
-      export Qt6_DIR=${QT_INSTALL_DIR}/${{ parameters.qtver }}/macos/lib/cmake/Qt6
-      QT_BASE_DIR=/tmp/qt/${{ parameters.qtver }}/macos
-      QTVER=${{ parameters.qtver }}
+      export QTVER=${{ parameters.qtver }}
+      export QT_INSTALL_DIR=/tmp/qt
+      export Qt6_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6
+      export QT_BASE_DIR=/tmp/qt/${QTVER}/macos
+      export Qt6Core_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Core
+      export Qt6Widgets_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Widgets
+      export Qt6Network_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Network
+      export Qt6PrintSupport_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6PrintSupport
+      export Qt6Gui_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Gui
+      export Qt6Svg_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Svg
+      
       # Building
       mkdir build
       cd build
