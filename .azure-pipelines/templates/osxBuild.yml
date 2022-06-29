@@ -7,19 +7,21 @@ parameters:
     default: true
   - name: threading
     default: true
+  - name: qtver
+    default: 6.2.2
 
 steps:
   - bash: |
       set -ex
       brew update-reset
       brew install ninja
-      brew install qt
-      brew install glfw3
-      brew install glew
       pip3 install pyinstaller
       pip3 install flask
       pip3 install h5py
       pip3 install lxml
+      # -- Qt
+      sudo pip3 install conan aqtinstall
+      aqt install-qt --outputdir /tmp/qt mac desktop ${{ parameters.qtver }} -m qtcharts
     displayName: 'Install Prerequisites'
   - bash: |
       wget https://github.com/disorderedmaterials/HDF5/releases/download/${{ parameters.hdf5tag }}/${{ parameters.hdf5tag }}-osx.zip
@@ -30,18 +32,15 @@ steps:
       set -ex
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
-      QT_INSTALL_DIR=/usr/local/Cellar/qt
-      QTVER=`ls -d ${QT_INSTALL_DIR}/* | sed "s/.*\(6\.[0-9][0-9]\.[0-9]\)/\1/g"`
-      Qt6_ROOT=${QTVER}
-      QT_BASE_DIR=${Qt6_ROOT}
-      Qt6_DIR=${QT_BASE_DIR}/lib/cmake/Qt6
-      PATH="${Qt6_DIR}:${PATH}"
+      Qt6_DIR=/tmp/qt/${{ parameters.qtver }}/macos/lib/cmake/Qt6
+      QT_BASE_DIR=/tmp/qt/${{ parameters.qtver }}/macos
+      QTVER=${{ parameters.qtver }}
       # Building
       mkdir build
       cd build
 
-      cmake ../ -G Ninja -DCMAKE_PREFIX_PATH:path=${QT_INSTALL_DIR}/${QTVER}/lib/cmake -DCMAKE_Fortran_COMPILER:string="gfortran-9" ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR
-      ninja
+      cmake -DGUI:bool=true -DMULTI_THREADING:bool=${{ parameters.threading }} ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR ../
+      make
 
       cd ../
       pyinstaller backend/isisInternal.py
