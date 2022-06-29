@@ -73,10 +73,6 @@ if(MSVC)
 endif()
 
 if(APPLE)
-    set(CMAKE_PREFIX_PATH "${QT_BASE_DIR}")
-endif(APPLE)
-
-if(APPLE)
   set(MACOSX_BUNDLE_ICON_FILE "jv2.icns")
   set(MACOSX_BUNDLE_LONG_VERSION_STRING
       "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
@@ -97,6 +93,8 @@ if(APPLE)
   add_definitions(-D_MAC)
 
   find_package(GLUT REQUIRED)
+
+  set(CMAKE_PREFIX_PATH "${QT_BASE_DIR}")
 endif(APPLE)
 
 # Resources
