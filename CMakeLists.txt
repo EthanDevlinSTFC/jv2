@@ -24,6 +24,10 @@ if(UNIX)
   list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/Modules")
 endif()
 
+if(APPLE)
+  set(CMAKE_PREFIX_PATH "${QT_BASE_DIR}")
+endif()
+
 set(QT_DEFAULT_MAJOR_VERSION 6)
 find_package(OpenGL REQUIRED)
 find_package(
@@ -94,7 +98,6 @@ if(APPLE)
 
   find_package(GLUT REQUIRED)
 
-  set(CMAKE_PREFIX_PATH "${QT_BASE_DIR}")
 endif(APPLE)
 
 # Resources
