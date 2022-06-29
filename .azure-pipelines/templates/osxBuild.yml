@@ -34,7 +34,7 @@ steps:
       # Managing packages
       QT_INSTALL_DIR=/usr/local/Cellar/qt
       QTVER=`ls -d ${QT_INSTALL_DIR}/* | sed "s/.*\(6\.[0-9][0-9]\.[0-9]\)/\1/g"`
-      Qt6_ROOT=${QT_INSTALL_DIR}/${QTVER}
+      Qt6_ROOT=${QTVER}
       QT_BASE_DIR={$Qt6_ROOT}/macos
       Qt6_DIR=${QT_BASE_DIR}/lib/cmake/Qt6
       PATH="${Qt6_DIR}:${PATH}"
