@@ -17,6 +17,7 @@ steps:
       brew install ninja
       brew install freeglut
       brew install glfw
+      brew install ftgl
       pip3 install pyinstaller
       pip3 install flask
       pip3 install h5py
