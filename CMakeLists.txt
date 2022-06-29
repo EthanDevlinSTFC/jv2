@@ -38,8 +38,6 @@ find_package(
              Network
              Charts
              Xml
-             OpenGL
-             OpenGLWidgets
              REQUIRED)
 
 find_package(Qt6OpenGL 6.0 REQUIRED)
