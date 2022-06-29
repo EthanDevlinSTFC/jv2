@@ -39,6 +39,7 @@ steps:
       export Qt6_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6
       export QT_BASE_DIR=/tmp/qt/${QTVER}/macos
       export Qt6Core_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Core
+      export Qt6CoreTools_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6CoreTools
       export Qt6Widgets_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Widgets
       export Qt6Network_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6Network
       export Qt6PrintSupport_DIR=${QT_INSTALL_DIR}/${QTVER}/macos/lib/cmake/Qt6PrintSupport
