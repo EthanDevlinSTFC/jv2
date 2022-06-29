@@ -20,7 +20,7 @@ steps:
       pip3 install h5py
       pip3 install lxml
       # -- Qt
-      sudo pip3 install conan aqtinstall
+      sudo pip3 install aqtinstall
       aqt install-qt --outputdir /tmp/qt mac desktop ${{ parameters.qtver }} -m qtcharts
     displayName: 'Install Prerequisites'
   - bash: |
@@ -38,7 +38,6 @@ steps:
       # Building
       mkdir build
       cd build
-      conan install .. --build missing
       cmake -DGUI:bool=true ${{ parameters.extraflags }} -DQT_BASE_DIR=$QT_BASE_DIR ../
       make
 
