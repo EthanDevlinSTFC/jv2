@@ -35,7 +35,7 @@ steps:
       HDF5_DIR="$(pwd)/${{ parameters.hdf5tag }}"
       # Managing packages
       QT_INSTALL_DIR=/tmp/qt
-      export Qt6_DIR = /tmp/qt/${{ parameters.qtver }}/macos/lib/cmake/Qt6
+      export Qt6_DIR=${QT_INSTALL_DIR}/${{ parameters.qtver }}/macos/lib/cmake/Qt6
       QT_BASE_DIR=/tmp/qt/${{ parameters.qtver }}/macos
       QTVER=${{ parameters.qtver }}
       # Building
