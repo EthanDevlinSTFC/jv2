@@ -53,7 +53,7 @@ stages:
         displayName: 'OSX'
         condition: eq(1,1)
         pool:
-          vmImage: 'macos-latest'
+          vmImage: 'macOS-10.15'
         steps:
           - checkout: self
             fetchDepth: 1
